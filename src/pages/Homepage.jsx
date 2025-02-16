@@ -7,6 +7,7 @@ import { contextData } from "../context/UserContext";
 import { IoClose } from "react-icons/io5";
 import CartCard from "../components/CartCard";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Homepage = () => {
   const { foods, setFoods, searching, showCart, setShowCart } =
@@ -48,20 +49,27 @@ const Homepage = () => {
           ))}
         </div>
       )}
-      <div className="w-full flex flex-wrap justify-center gap-3 px-5 py-8">
-        {foods.map((item) => (
-          <Cards
-            key={item.id}
-            name={item.food_name}
-            image={item.food_image}
-            id={item.id}
-            category={item.food_category}
-            price={item.price}
-            type={item.food_type}
-          />
-        ))}
-      </div>
-
+      {foods.length > 0 ? (
+        <>
+          <div className="w-full flex flex-wrap justify-center gap-3 px-5 py-8">
+            {foods.map((item) => (
+              <Cards
+                key={item.id}
+                name={item.food_name}
+                image={item.food_image}
+                id={item.id}
+                category={item.food_category}
+                price={item.price}
+                type={item.food_type}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="text-center mt-10 text-white text-2xl font-semibold">
+          No foods found
+        </div>
+      )}
       <div
         className={`w-full md:w-[40vw] h-[100vh] overflow-auto fixed top-0 right-0 bg-slate-200 shadow-2xl p-5 transition-all duration-500 ${
           showCart ? "translate-x-0" : "translate-x-full"
@@ -78,39 +86,51 @@ const Homepage = () => {
             <IoClose size={40} />
           </span>
         </header>
-        <div>
-          {items.map((item) => (
-            <CartCard
-              key={item.id}
-              name={item.name}
-              price={item.price}
-              image={item.image}
-              id={item.id}
-              quantity={item.quantity}
-            />
-          ))}
-        </div>
-        <div className="w-full border-y-2 p-5 border-gray-400 mt-5">
-          <div className="flex justify-between">
-            <span className="text-lg font-semibold">Sub-total</span>
-            <span className="text-lg font-bold">Rs. {subTotal}</span>
+
+        {items.length > 0 ? (
+          <>
+            <div>
+              {items.map((item) => (
+                <CartCard
+                  key={item.id}
+                  name={item.name}
+                  price={item.price}
+                  image={item.image}
+                  id={item.id}
+                  quantity={item.quantity}
+                />
+              ))}
+            </div>
+            <div className="w-full border-y-2 p-5 border-gray-400 mt-5">
+              <div className="flex justify-between">
+                <span className="text-lg font-semibold">Sub-total</span>
+                <span className="text-lg font-bold">Rs. {subTotal}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-lg font-semibold">Tax</span>
+                <span className="text-lg font-bold">Rs. {taxes}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-lg font-semibold">Delivery Fee</span>
+                <span className="text-lg font-bold">Rs. {deliveryFee}</span>
+              </div>
+            </div>
+            <div className="flex justify-between px-5">
+              <span className="text-xl font-bold">Total</span>
+              <span className="text-xl font-bold">Rs. {total}</span>
+            </div>
+            <button
+              className="mt-3 float-right px-7 py-3 rounded-md bg-blue-700 text-white hover:bg-blue-600 cursor-pointer text-smd md:text-xl"
+              onClick={() => toast.success("Order Placed")}
+            >
+              Place Order
+            </button>
+          </>
+        ) : (
+          <div className="m-5 text-center text-xl font-semibold">
+            Basket is empty
           </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-semibold">Tax</span>
-            <span className="text-lg font-bold">Rs. {taxes}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-lg font-semibold">Delivery Fee</span>
-            <span className="text-lg font-bold">Rs. {deliveryFee}</span>
-          </div>
-        </div>
-        <div className="flex justify-between px-5">
-          <span className="text-xl font-bold">Total</span>
-          <span className="text-xl font-bold">Rs. {total}</span>
-        </div>
-        <button className="mt-3 float-right px-7 py-3 rounded-md bg-blue-700 text-white hover:bg-blue-600 cursor-pointer text-smd md:text-xl">
-          Place Order
-        </button>
+        )}
       </div>
     </div>
   );

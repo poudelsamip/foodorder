@@ -19,7 +19,9 @@ function CartCard({ name, id, price, image, quantity }) {
           <div className="w-[40%] h-[50px] flex rounded-lg overflow-hidden border border-blue-700">
             <button
               className="w-[30%] h-full bg-white cursor-pointer hover:bg-gray-200"
-              onClick={() => dispatch(decrementQty({ id }))}
+              onClick={() =>
+                quantity > 0 ? dispatch(decrementQty({ id })) : null
+              }
             >
               -
             </button>
