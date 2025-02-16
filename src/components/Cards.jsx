@@ -1,5 +1,8 @@
 import React from "react";
-const Cards = ({ name, image, price, type }) => {
+import { useDispatch } from "react-redux";
+import { addItem } from "../redux/cartSlice";
+const Cards = ({ name, id, image, price, type }) => {
+  let dispatch = useDispatch();
   return (
     <div className="w-[150px] h-[200px] md:w-[250px] md:h-[300px] bg-slate-200 p-3 rounded-md flex flex-col gap-0 md:gap-2 shadow-2xl hover:border-2 border-slate-700 ">
       <div className="w-full h-[70%] md:h-[60%] overflow-hidden rounded-md mt-1">
@@ -10,7 +13,12 @@ const Cards = ({ name, image, price, type }) => {
         <div className="text-sm md:text-md font-semibold">{price}</div>
         <div className="text-sm md:text-md font-semibold">{type}</div>
       </div>
-      <button className="w-full p-2 rounded-md bg-blue-700 text-white hover:bg-blue-600 cursor-pointer text-sm md:text-xl">
+      <button
+        className="w-full p-2 rounded-md bg-blue-700 text-white hover:bg-blue-600 cursor-pointer text-sm md:text-xl"
+        onClick={() =>
+          dispatch(addItem({ id, name, price, image, quantity: 1 }))
+        }
+      >
         Add to basket
       </button>
     </div>

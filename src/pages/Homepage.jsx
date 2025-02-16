@@ -6,6 +6,7 @@ import Cards from "../components/Cards";
 import { contextData } from "../context/UserContext";
 import { IoClose } from "react-icons/io5";
 import CartCard from "../components/CartCard";
+import { useSelector } from "react-redux";
 
 const Homepage = () => {
   const { foods, setFoods, searching, showCart, setShowCart } =
@@ -20,6 +21,16 @@ const Homepage = () => {
       setFoods(newFoodItem);
     }
   };
+
+  const items = useSelector((state) => state.cart);
+  let subTotal = items.reduce(
+    (total, item) => total + item.quantity * item.price,
+    0
+  );
+  let taxes = Math.floor(subTotal * 0.13);
+  let deliveryFee = 50;
+  let total = subTotal + taxes + deliveryFee;
+
   return (
     <div className="w-full min-h-screen bg-slate-700">
       <Navbar />
@@ -52,7 +63,7 @@ const Homepage = () => {
       </div>
 
       <div
-        className={`w-full md:w-[40vw] h-[100vh] fixed top-0 right-0 bg-slate-200 shadow-2xl p-5 transition-all duration-500 ${
+        className={`w-full md:w-[40vw] h-[100vh] overflow-auto fixed top-0 right-0 bg-slate-200 shadow-2xl p-5 transition-all duration-500 ${
           showCart ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -67,7 +78,39 @@ const Homepage = () => {
             <IoClose size={40} />
           </span>
         </header>
-        <CartCard />
+        <div>
+          {items.map((item) => (
+            <CartCard
+              key={item.id}
+              name={item.name}
+              price={item.price}
+              image={item.image}
+              id={item.id}
+              quantity={item.quantity}
+            />
+          ))}
+        </div>
+        <div className="w-full border-y-2 p-5 border-gray-400 mt-5">
+          <div className="flex justify-between">
+            <span className="text-lg font-semibold">Sub-total</span>
+            <span className="text-lg font-bold">Rs. {subTotal}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-semibold">Tax</span>
+            <span className="text-lg font-bold">Rs. {taxes}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-lg font-semibold">Delivery Fee</span>
+            <span className="text-lg font-bold">Rs. {deliveryFee}</span>
+          </div>
+        </div>
+        <div className="flex justify-between px-5">
+          <span className="text-xl font-bold">Total</span>
+          <span className="text-xl font-bold">Rs. {total}</span>
+        </div>
+        <button className="mt-3 float-right px-7 py-3 rounded-md bg-blue-700 text-white hover:bg-blue-600 cursor-pointer text-smd md:text-xl">
+          Place Order
+        </button>
       </div>
     </div>
   );

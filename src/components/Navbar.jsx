@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { MdFastfood } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { FaBasketShopping } from "react-icons/fa6";
 import { contextData } from "../context/UserContext";
 import { food_items } from "../Food";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   let { setFoods, setSearching, setShowCart } = useContext(contextData);
@@ -17,6 +18,8 @@ const Navbar = () => {
       : food_items;
     setFoods(filteredFoods);
   };
+
+  const items = useSelector((state) => state.cart);
 
   return (
     <div className="w-full h-[80px] flex justify-between items-center px-3 md:px-8 sticky top-0 bg-slate-700">
@@ -39,7 +42,9 @@ const Navbar = () => {
         className="w-[50px] h-[50px] bg-slate-100 flex justify-center items-center rounded-md shadow-xl relative"
         onClick={() => setShowCart(true)}
       >
-        <span className="absolute top-0 right-[5px] font-semibold">0</span>
+        <span className="absolute top-0 right-[5px] font-semibold">
+          {items.length}
+        </span>
         <FaBasketShopping className="w-[30px] h-[30px] text-blue-700 cursor-pointer" />
       </div>
     </div>
